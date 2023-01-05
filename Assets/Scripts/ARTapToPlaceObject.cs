@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -10,18 +11,20 @@ public class ARTapToPlaceObject : MonoBehaviour
     public GameObject placementIndicator;
     public GameObject ghost;
     public GameObject objectToPlace;
-    
+
     // furniture
     public GameObject chair;
     public GameObject table;
     public GameObject pouf;
     public GameObject shelf;
     public GameObject sofa;
+    public GameObject emptyZone;
 
     private Pose PlacementPose; // contains a Vector3 for a position and a quaternion for rotation
     private ARRaycastManager aRRaycastManager;
     private bool placementPoseIsValid = false;
 
+    private List<GameObject> placementList = new List<GameObject>();
     void Start()
     {
         aRRaycastManager = FindObjectOfType<ARRaycastManager>();
@@ -65,13 +68,28 @@ public class ARTapToPlaceObject : MonoBehaviour
     // Next section
     public void PlaceObject()
     {
+        GameObject temp = ghost;
         if (placementPoseIsValid)
         {
             ghost.GetComponent<Recolour>().SetOriginalMaterial();
             ghost.transform.parent = null;
-            ghost = Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
-            ghost.GetComponent<Recolour>().SetValid();
+            temp = Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
+            temp.GetComponent<Recolour>().SetValid();
+            //ghost = Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
+            //ghost.GetComponent<Recolour>().SetValid();
+            placementList.Add(temp);
             ghost.transform.parent = placementIndicator.transform;
+        }
+        else
+        {
+            Debug.Log("!!!_POSE INVALID");
+        }
+
+        if(objectToPlace.tag == "Table")
+        { 
+            AdditionalObject temp2 = temp.GetComponent<AdditionalObject>();
+            temp2.CreateAdditional(PlacementPose.position, PlacementPose.rotation);
+            Debug.Log("!!!_TABLE- create empty");
         }
     }
     
@@ -82,6 +100,7 @@ public class ARTapToPlaceObject : MonoBehaviour
         ghost = Instantiate(o, PlacementPose.position, PlacementPose.rotation);
         ghost.GetComponent<Recolour>().SetValid();
         ghost.transform.parent = placementIndicator.transform;
+        Debug.Log("!!!_ usual object");
     }
     
     public void UseChair()

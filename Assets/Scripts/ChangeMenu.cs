@@ -11,9 +11,17 @@ public class ChangeMenu : MonoBehaviour
     public GameObject rotateControls;
     public GameObject currentlyDisplayed;
     public GameObject deleteControls;
+    public GameObject addItemControls;
     public GameObject ghost;
     public GameObject placementIndicator;
-    public bool isSectionDisplayedToggle = true;
+    
+    public bool isSectionDisplayedToggle = false;
+
+    private static bool isAddItemMode = false;
+    bool stopFlag = true;
+    public GameObject addItemButton;
+    private static GameObject currentEmptyZone;
+    
     void Start()
     {
         /*
@@ -22,6 +30,16 @@ public class ChangeMenu : MonoBehaviour
         */
     }
     
+    public void SetAddItem()
+    {
+        //ToggleMenu(addItemControls);
+        addItemControls.SetActive(true);
+        stopFlag = true;
+        isAddItemMode = false;
+        addItemButton.SetActive(false);
+        Debug.Log("!!!_ addItemControls");
+    }
+
     public void SetCatalogue()
     {
         ToggleMenu(catalogueControls);
@@ -40,13 +58,58 @@ public class ChangeMenu : MonoBehaviour
     {
         ToggleMenu(deleteControls);
     }
-    
+
+    /*
+    public void SetAddItemChoise()
+    {
+        Debug.Log("!!!_SetAddItemChoise");
+    }*/
+
+    public static void AddItemMode(bool b, GameObject currentEmpty = null)
+    {
+        currentEmptyZone = null;
+        Debug.Log("!!!_BOOL (ADDITEMMODE) = " + b);
+        isAddItemMode = b;
+        if(currentEmpty != null)
+        {
+            currentEmptyZone = currentEmpty;
+        }
+        Debug.Log("!!!_END ADD ITEM MODE");
+    }
+
+    private void Update()
+    {
+        if (stopFlag && isAddItemMode)
+        {
+            addItemButton.SetActive(true);
+            addItemControls.SetActive(false);
+            stopFlag = false;
+            Debug.Log("!!!_ ADD ITEM MENU = TRUE");
+        }
+        else if (!stopFlag && !isAddItemMode)
+        {
+            addItemButton.SetActive(false);
+            stopFlag = true;
+            currentEmptyZone = null;
+            Debug.Log("!!!_ ADD ITEM MENU = FALSE");
+        }
+    }
+
     private void ToggleMenu(GameObject menu)
     {
-        if (currentlyDisplayed == catalogueControls)
+        addItemControls.SetActive(false);
+        if (!stopFlag && isAddItemMode)
+        {
+            stopFlag = true;
+            isAddItemMode = false;
+            addItemButton.SetActive(false);
+        }
+
+        if (currentlyDisplayed == catalogueControls || menu == addItemControls)
         {
             Destroy(ghost);
             placementIndicator.SetActive(false);
+            Debug.Log("!!!_ 1 currentlyDisplayed == catalogueControls");
         }
         
         if (currentlyDisplayed != menu)
@@ -55,11 +118,19 @@ public class ChangeMenu : MonoBehaviour
             menu.SetActive(true);
             currentlyDisplayed = menu;
             isSectionDisplayedToggle = true;
+            Debug.Log("!!!_ 2 currentlyDisplayed != menu");
         }
         else
         {
             currentlyDisplayed.SetActive(!isSectionDisplayedToggle);
             isSectionDisplayedToggle = !isSectionDisplayedToggle;
+            Debug.Log("!!!_ 3 else");
         }
+    }
+
+    public GameObject GetCurrentEmptyZone()
+    {
+        addItemControls.SetActive(false);
+        return currentEmptyZone;
     }
 }
