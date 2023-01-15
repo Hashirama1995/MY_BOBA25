@@ -6,9 +6,7 @@ using UnityEngine.XR.ARSubsystems;
 
 public class MoveObject : MonoBehaviour
 {
-    // private ARRaycastManager aRRaycastManager;
     public Camera aRCamera;
-
     private GameObject objectToMove;
     Vector3 oldPose;
     Vector3 newPose;
@@ -24,8 +22,6 @@ public class MoveObject : MonoBehaviour
                 objectToMove = hitObject.transform.parent.transform.parent.gameObject;
 
                 oldPose = objectToMove.transform.position;
-                Debug.Log("!!!_ old position" + oldPose);
-
                 objectToMove.GetComponent<Recolour>().SetSelected();
                 objectToMove.transform.parent = aRCamera.transform;
             }
@@ -34,17 +30,11 @@ public class MoveObject : MonoBehaviour
 
     public void Deselect()
     {
-        Debug.Log("!!!_ DONE");
-        objectToMove.GetComponent<Recolour>().SetOriginalMaterial();
-
-        Debug.Log("!!!_ new position" + objectToMove.transform.position);
-        
+        objectToMove.GetComponent<Recolour>().SetOriginalMaterial();        
         if (objectToMove.tag == "Table" || objectToMove.tag == "rack")
         {
 
             Vector3 delta = objectToMove.transform.position - oldPose;
-            //Vector3 delta = objectToMove.transform.position;
-            Debug.Log("!!!_ delta" + objectToMove.transform.position);
             objectToMove.GetComponent<AdditionalObject>().NewPosition(delta);
         }
 

@@ -36,45 +36,30 @@ public class ARTapAddItem : MonoBehaviour
         if(list != null)
         {
             cao.InitializedList(list);
-            //Debug.Log("!!!_______" + list.Contains(emptyZone));
-
             int a = list.FindInstanceID(emptyZone);
-            Debug.Log("!!!_______" + a);
-
             CreateAddObject temp = emptyZone.GetComponent<CreateAddObject>();
             temp.ReplaceObject(a, teee);
         }
         else
         {
-            Debug.Log("!!!__LIST IS EMPTY ARTAPADDITEM");
             CreateAddObject temp = emptyZone.GetComponent<CreateAddObject>();
             temp.ReplaceObject(0, teee);
         }
-        
-        Debug.Log("!!!_ ZAMENA PROISOSHLA");
     }
 
     public void AddFloorOnItem()
     {
         AddObjectOnItem(floor);
-        Debug.Log("!!!_ AddFloorOnItem");
     }
 
     public void AddPotOnItem()
     {
         AddObjectOnItem(pot);
-        Debug.Log("!!!_ AddPotOnItem");
     }
 
     public void AddPlateOnItem()
     {
         AddObjectOnItem(plate);
-        Debug.Log("!!!_ AddPlateOnItem");
-    }
-
-    public void DestroyObject()
-    {
-        Debug.Log("!!!_ DestroyObject");
     }
 
     private GameObject GetCurrentEmptyZone()

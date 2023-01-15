@@ -114,13 +114,11 @@ public class ARTapToPlaceObject : MonoBehaviour
             
 
             temp2.CreateAdditionalTable(PlacementPose.position, PlacementPose.rotation);
-            Debug.Log("!!!_TABLE- create empty");
         }
         else if(objectToPlace.tag == "rack")
         {
             AdditionalObject temp2 = temp.GetComponent<AdditionalObject>();
             temp2.CreateAdditionalRack(PlacementPose.position, PlacementPose.rotation);
-            Debug.Log("!!!rack- create empty");
         }
     }
 
@@ -140,13 +138,11 @@ public class ARTapToPlaceObject : MonoBehaviour
                     aRanchorManager.anchorPrefab = oldPrefab;
                     if (anchor != null)
                     {
-                        Debug.Log("!!!_ANCHOR IS ADDED. GOOD");
                         return anchor;
                     }
                 }
             }
         }
-        Debug.Log("!!!_ANCHOR IS NOT ADDED. BAD!!");
         return null;
         
     }
@@ -158,7 +154,6 @@ public class ARTapToPlaceObject : MonoBehaviour
         ghost = Instantiate(o, PlacementPose.position, PlacementPose.rotation);
         ghost.GetComponent<Recolour>().SetValid();
         ghost.transform.parent = placementIndicator.transform;
-        Debug.Log("!!!_ usual object");
     }
     
     public void UseChair()

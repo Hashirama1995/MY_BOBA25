@@ -25,10 +25,7 @@ public class ChangeMenu : MonoBehaviour
     
     void Start()
     {
-        /*
-        catalogueControls.SetActive(true);
-        currentlyDisplayed = catalogueControls;
-        */
+
     }
     
     public void SetAddItem()
@@ -38,7 +35,6 @@ public class ChangeMenu : MonoBehaviour
         stopFlag = true;
         isAddItemMode = false;
         addItemButton.SetActive(false);
-        Debug.Log("!!!_ addItemControls");
     }
 
     public void SetCatalogue()
@@ -60,30 +56,20 @@ public class ChangeMenu : MonoBehaviour
         ToggleMenu(deleteControls);
     }
 
-    /*
-    public void SetAddItemChoise()
-    {
-        Debug.Log("!!!_SetAddItemChoise");
-    }*/
 
     public static void AddItemMode(bool b, List<GameObject> list, GameObject currentEmpty = null)
     {
         currentEmptyZone = null;
         //currentEmptyList = null;
-        Debug.Log("!!!_BOOL (ADDITEMMODE) = " + b);
         isAddItemMode = b;
         if (currentEmpty != null )
         {
-            currentEmptyZone = currentEmpty;
-            Debug.Log("!!!_?_NULL OBJ");
-            
+            currentEmptyZone = currentEmpty;            
         }
         if(list != null)
         {
             currentEmptyList = list;
-            Debug.Log("!!!_?_NULL LIST");
         }
-        Debug.Log("!!!_END ADD ITEM MODE");
     }
 
     private void Update()
@@ -93,15 +79,12 @@ public class ChangeMenu : MonoBehaviour
             addItemButton.SetActive(true);
             addItemControls.SetActive(false);
             stopFlag = false;
-            Debug.Log("!!!_ ADD ITEM MENU = TRUE");
         }
         else if (!stopFlag && !isAddItemMode)
         {
             addItemButton.SetActive(false);
             stopFlag = true;
             currentEmptyZone = null;
-            //currentEmptyList = null;
-            Debug.Log("!!!_ ADD ITEM MENU = FALSE");
         }
     }
 
@@ -119,7 +102,6 @@ public class ChangeMenu : MonoBehaviour
         {
             Destroy(ghost);
             placementIndicator.SetActive(false);
-            Debug.Log("!!!_ 1 currentlyDisplayed == catalogueControls");
         }
         
         if (currentlyDisplayed != menu)
@@ -128,13 +110,11 @@ public class ChangeMenu : MonoBehaviour
             menu.SetActive(true);
             currentlyDisplayed = menu;
             isSectionDisplayedToggle = true;
-            Debug.Log("!!!_ 2 currentlyDisplayed != menu");
         }
         else
         {
             currentlyDisplayed.SetActive(!isSectionDisplayedToggle);
             isSectionDisplayedToggle = !isSectionDisplayedToggle;
-            Debug.Log("!!!_ 3 else");
         }
     }
 

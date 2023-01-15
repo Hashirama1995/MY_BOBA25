@@ -18,12 +18,10 @@ public class CreateAddObject : MonoBehaviour
     public void InitializedList(List<GameObject> list)
     {
         objects = list;
-        Debug.Log("!!!_ list count ="+list.Count);
     }
 
     public void ReplaceObject(int index, GameObject newObj)
     {
-        Debug.Log("!!!_ replace object start");
         GameObject temp = objects[index];
         objects[index] = newObj;
         Destroy(temp.gameObject);
@@ -42,7 +40,6 @@ public class CreateAddObject : MonoBehaviour
                 if (tempObj.tag == "empty")
                 {
                     currentMode = !currentMode;
-                    Debug.Log("!!!_empty Object");
                     ChangeMenu.AddItemMode(currentMode, objects, hitObject.transform.gameObject);
 
                 }
