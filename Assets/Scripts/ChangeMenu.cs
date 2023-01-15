@@ -21,6 +21,7 @@ public class ChangeMenu : MonoBehaviour
     bool stopFlag = true;
     public GameObject addItemButton;
     private static GameObject currentEmptyZone;
+    private static List<GameObject> currentEmptyList;
     
     void Start()
     {
@@ -65,14 +66,22 @@ public class ChangeMenu : MonoBehaviour
         Debug.Log("!!!_SetAddItemChoise");
     }*/
 
-    public static void AddItemMode(bool b, GameObject currentEmpty = null)
+    public static void AddItemMode(bool b, List<GameObject> list, GameObject currentEmpty = null)
     {
         currentEmptyZone = null;
+        //currentEmptyList = null;
         Debug.Log("!!!_BOOL (ADDITEMMODE) = " + b);
         isAddItemMode = b;
-        if(currentEmpty != null)
+        if (currentEmpty != null )
         {
             currentEmptyZone = currentEmpty;
+            Debug.Log("!!!_?_NULL OBJ");
+            
+        }
+        if(list != null)
+        {
+            currentEmptyList = list;
+            Debug.Log("!!!_?_NULL LIST");
         }
         Debug.Log("!!!_END ADD ITEM MODE");
     }
@@ -91,6 +100,7 @@ public class ChangeMenu : MonoBehaviour
             addItemButton.SetActive(false);
             stopFlag = true;
             currentEmptyZone = null;
+            //currentEmptyList = null;
             Debug.Log("!!!_ ADD ITEM MENU = FALSE");
         }
     }
@@ -132,5 +142,10 @@ public class ChangeMenu : MonoBehaviour
     {
         addItemControls.SetActive(false);
         return currentEmptyZone;
+    }
+
+    public List<GameObject> GetCurrentEmptyList()
+    {
+        return currentEmptyList;
     }
 }

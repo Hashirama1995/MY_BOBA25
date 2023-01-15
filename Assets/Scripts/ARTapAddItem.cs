@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -28,8 +29,28 @@ public class ARTapAddItem : MonoBehaviour
     private void AddObjectOnItem(GameObject obj)
     {
         GameObject emptyZone = GetCurrentEmptyZone();
+        List<GameObject> list = GetCurrentEmptyList();
         GameObject teee = Instantiate(obj, emptyZone.transform.position, Quaternion.identity);
-        Destroy(emptyZone);
+        CreateAddObject cao = teee.GetComponent<CreateAddObject>();
+
+        if(list != null)
+        {
+            cao.InitializedList(list);
+            //Debug.Log("!!!_______" + list.Contains(emptyZone));
+
+            int a = list.FindInstanceID(emptyZone);
+            Debug.Log("!!!_______" + a);
+
+            CreateAddObject temp = emptyZone.GetComponent<CreateAddObject>();
+            temp.ReplaceObject(a, teee);
+        }
+        else
+        {
+            Debug.Log("!!!__LIST IS EMPTY ARTAPADDITEM");
+            CreateAddObject temp = emptyZone.GetComponent<CreateAddObject>();
+            temp.ReplaceObject(0, teee);
+        }
+        
         Debug.Log("!!!_ ZAMENA PROISOSHLA");
     }
 
@@ -69,5 +90,16 @@ public class ARTapAddItem : MonoBehaviour
             Debug.Log(currentEmpty);
         }
         return currentEmpty;
+    }
+
+    private List<GameObject> GetCurrentEmptyList()
+    {
+        ChangeMenu temp = FineContol.GetComponent<ChangeMenu>();
+        List<GameObject> list = temp.GetCurrentEmptyList();
+        if (list == null)
+        {
+            Debug.Log("!!!_ NULL EMPTY list");
+        }
+        return list;
     }
 }

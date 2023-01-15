@@ -22,12 +22,19 @@ public class ARTapToPlaceObject : MonoBehaviour
 
     private Pose PlacementPose; // contains a Vector3 for a position and a quaternion for rotation
     private ARRaycastManager aRRaycastManager;
+    private ARAnchorManager aRanchorManager;
+    private ARPlaneManager aPlaneManager;
     private bool placementPoseIsValid = false;
+
+    private ARRaycastHit lastHit;
+    ARAnchor localAnchor;
 
     private List<GameObject> placementList = new List<GameObject>();
     void Start()
     {
         aRRaycastManager = FindObjectOfType<ARRaycastManager>();
+        aRanchorManager = FindObjectOfType<ARAnchorManager>();
+        aPlaneManager = FindObjectOfType<ARPlaneManager>();
     }
 
     void Update()
@@ -56,17 +63,24 @@ public class ARTapToPlaceObject : MonoBehaviour
     {
         var screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
         var hits = new List<ARRaycastHit>();
+        
         aRRaycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
-
+        
         placementPoseIsValid = hits.Count > 0;
+       
+        if (hits[0].trackable is ARPlane plane)
+        {
+            lastHit = hits[0];
+        }
+
         if (placementPoseIsValid)
         {
             PlacementPose = hits[0].pose;
         }
     }
 
-    // Next section
-    public void PlaceObject()
+        // Next section
+        public void PlaceObject()
     {
         GameObject temp = ghost;
         if (placementPoseIsValid)
@@ -74,7 +88,11 @@ public class ARTapToPlaceObject : MonoBehaviour
             ghost.GetComponent<Recolour>().SetOriginalMaterial();
             ghost.transform.parent = null;
             temp = Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
+            //AnchorContent(temp, temp.GetComponent<Pose>());
+            //temp.AddComponent<ARAnchor>();
+            
             temp.GetComponent<Recolour>().SetValid();
+            temp.AddComponent<ARAnchor>();
             //ghost = Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
             //ghost.GetComponent<Recolour>().SetValid();
             placementList.Add(temp);
@@ -88,11 +106,51 @@ public class ARTapToPlaceObject : MonoBehaviour
         if(objectToPlace.tag == "Table")
         { 
             AdditionalObject temp2 = temp.GetComponent<AdditionalObject>();
-            temp2.CreateAdditional(PlacementPose.position, PlacementPose.rotation);
+
+            //ARAnchor FirstOBj_aRAnchor = temp.GetComponent<ARAnchor>();
+
+            //GameObject tempSecondObject = Instantiate(objectToPlace, PlacementPose.position + new Vector3(1,0,0), PlacementPose.rotation);
+            //AnchorContent(tempSecondObject, tempSecondObject.GetComponent<Pose>());
+            
+
+            temp2.CreateAdditionalTable(PlacementPose.position, PlacementPose.rotation);
             Debug.Log("!!!_TABLE- create empty");
         }
+        else if(objectToPlace.tag == "rack")
+        {
+            AdditionalObject temp2 = temp.GetComponent<AdditionalObject>();
+            temp2.CreateAdditionalRack(PlacementPose.position, PlacementPose.rotation);
+            Debug.Log("!!!rack- create empty");
+        }
     }
-    
+
+
+    ARAnchor AnchorContent(GameObject content, Pose pose)
+    {
+        if(lastHit != null)
+        {
+            if (aRanchorManager && aPlaneManager)
+            {
+                if(lastHit.trackable is ARPlane plane)
+                {
+                    ARAnchor anchor;
+                    var oldPrefab = aRanchorManager.anchorPrefab;
+                    aRanchorManager.anchorPrefab = content;
+                    anchor = aRanchorManager.AttachAnchor(plane, lastHit.pose);
+                    aRanchorManager.anchorPrefab = oldPrefab;
+                    if (anchor != null)
+                    {
+                        Debug.Log("!!!_ANCHOR IS ADDED. GOOD");
+                        return anchor;
+                    }
+                }
+            }
+        }
+        Debug.Log("!!!_ANCHOR IS NOT ADDED. BAD!!");
+        return null;
+        
+    }
+
     private void UseObject(GameObject o)
     {
         objectToPlace = o;

@@ -13,7 +13,7 @@ public class RemoveObject : MonoBehaviour
             {
                 Debug.Log("!!!_ StartDestroy!");
 
-                if(hitObject.transform.parent.transform.parent.gameObject.tag == "Table")
+                if(hitObject.transform.parent.transform.parent.gameObject.tag == "Table" || hitObject.transform.parent.transform.parent.gameObject.tag == "rack")
                 {
                     Debug.Log("!!!_GET COMPONENT");
                     AdditionalObject AO = hitObject.transform.parent.transform.parent.gameObject.GetComponent<AdditionalObject>();

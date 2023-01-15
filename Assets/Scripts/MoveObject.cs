@@ -39,9 +39,11 @@ public class MoveObject : MonoBehaviour
 
         Debug.Log("!!!_ new position" + objectToMove.transform.position);
         
-        if (objectToMove.tag == "Table")
+        if (objectToMove.tag == "Table" || objectToMove.tag == "rack")
         {
+
             Vector3 delta = objectToMove.transform.position - oldPose;
+            //Vector3 delta = objectToMove.transform.position;
             Debug.Log("!!!_ delta" + objectToMove.transform.position);
             objectToMove.GetComponent<AdditionalObject>().NewPosition(delta);
         }
